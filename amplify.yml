@@ -1,6 +1,7 @@
 version: 1
 applications:
-  - frontend:
+  - appRoot: sandbox
+    frontend:
       phases:
         build:
           commands: []
@@ -10,4 +11,15 @@ applications:
           - '**/*'
       cache:
         paths: []
-    appRoot: sandbox
+    backend:
+      phases:
+        preBuild:
+            commands:
+            - echo "preBuild of backend"
+        build:
+            commands:
+            - echo "build of backend"
+        postBuild:
+            commands:
+            - echo "postBuild of backend"
+    
