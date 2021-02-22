@@ -9,10 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-    - name: Dump GitHub context ${{ github.job }}
-      env:
-        GITHUB_CONTEXT: ${{ toJSON(github) }}
-      run: echo "$GITHUB_CONTEXT"
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: Install semantic-release and plugins
+      run: |
+        npm install -g semantic-release
+        npm install -g @semantic-release/changelog
+        npm install -g @semantic-release/git
+        npm install -g @semantic-release/github
+        npm install -g @semantic-release/exec
     - name: Update git
       run: |
         sudo add-apt-repository -y ppa:git-core/ppa
@@ -30,6 +37,10 @@ jobs:
         git status
         git merge origin/main
         git push origin releases/next
+    - name: Release
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      run: npx semantic-release
     - name: Manage PR for next release
       uses: repo-sync/pull-request@v2
       with:
