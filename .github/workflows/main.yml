@@ -1,9 +1,7 @@
-name: Release-related workflows
-
+name: Update release branch
 on:
   push:
-    branches: [ main, releases/next ]
-
+    branches: [ main ]
 jobs:
   add_to_next_release:
     runs-on: ubuntu-latest
