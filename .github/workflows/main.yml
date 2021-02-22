@@ -30,6 +30,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/releases/next'
     steps:
+    - name: Update git
+      run: |
+        sudo add-apt-repository -y ppa:git-core/ppa
+        sudo apt-get update
+        sudo apt-get install git -y
     - name: Use Node.js 12.x
       uses: actions/setup-node@v1
       with:
