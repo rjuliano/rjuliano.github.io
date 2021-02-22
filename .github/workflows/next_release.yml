@@ -1,4 +1,4 @@
-name: Update release branch
+name: Release-branch workflow
 on:
   push
 jobs:
