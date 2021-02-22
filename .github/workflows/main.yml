@@ -5,8 +5,14 @@ on:
 jobs:
   update_release_branch:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+#     if: github.ref == 'refs/heads/main'
     steps:
+    - name: Event summary
+      run: |
+        echo 'Event summary for ${{ github.job }}'
+        echo 'Github head ref ${{github.github.head_ref}}'
+        echo 'Github ref ${{github.github.ref}}'
+        echo 'Github event ${{github.event}}'
     - name: Update git
       run: |
         sudo add-apt-repository -y ppa:git-core/ppa
@@ -26,9 +32,12 @@ jobs:
         git push origin releases/next
   update_release_pr:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/releases/next'
+#     if: github.ref == 'refs/heads/releases/next'
     steps:
-    - name: Update gradle.properties and CHANGELOG.md
+    - name: Event summary
       run: |
-        echo 'Updating gradle.properties and CHANGELOG.md for next release'
+        echo 'Event summary for ${{ github.job }}'
+        echo 'Github head ref ${{github.github.head_ref}}'
+        echo 'Github ref ${{github.github.ref}}'
+        echo 'Github event ${{github.event}}'
         
