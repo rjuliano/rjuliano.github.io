@@ -33,7 +33,7 @@ jobs:
 #     if: github.ref == 'refs/heads/releases/next'
     steps:
     - name: Dump GitHub context ${{ github.job }}
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      run: echo "$GITHUB_CONTEXT"
         
