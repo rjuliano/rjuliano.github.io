@@ -1,7 +1,6 @@
 name: Update release branch
 on:
-  push:
-    branches: [ releases/next ] 
+  push
 jobs:
   update_release_pr:
     runs-on: ubuntu-latest
