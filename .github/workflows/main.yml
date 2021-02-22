@@ -3,7 +3,7 @@ on:
   push:
     branches: [ main, releases/next ]
 jobs:
-  add_to_next_release:
+  update_release_branch:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
@@ -24,3 +24,11 @@ jobs:
         git status
         git merge origin/main
         git push origin releases/next
+  update_release_pr:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/releases/next'
+    steps:
+    - name: Update gradle.properties and CHANGELOG.md
+      run: |
+        echo 'Updating gradle.properties and CHANGELOG.md for next release'
+        
