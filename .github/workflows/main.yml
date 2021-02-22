@@ -35,9 +35,9 @@ jobs:
         cd $GITHUB_WORKSPACE
         git fetch --tags
         git status
-        git merge origin/main
+        git rebase origin/main
         git push origin releases/next
-    - name: Release
+    - name: Update version
       env:
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       run: npx semantic-release
