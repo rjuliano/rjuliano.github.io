@@ -28,4 +28,7 @@ jobs:
         git status
         git merge origin/main
         git push origin releases/next
+    - name: Create release PR if needed
+      uses: ./.github/actions/release-pr
+      
         
