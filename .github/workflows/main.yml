@@ -7,12 +7,10 @@ jobs:
     runs-on: ubuntu-latest
 #     if: github.ref == 'refs/heads/main'
     steps:
-    - name: Event summary
-      run: |
-        echo 'Event summary for ${{ github.job }}'
-        echo 'Github head ref ${{github.github.head_ref}}'
-        echo 'Github ref ${{github.github.ref}}'
-        echo 'Github event ${{github.event}}'
+    - name: Dump GitHub context ${{ github.job }}
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
     - name: Update git
       run: |
         sudo add-apt-repository -y ppa:git-core/ppa
@@ -34,10 +32,8 @@ jobs:
     runs-on: ubuntu-latest
 #     if: github.ref == 'refs/heads/releases/next'
     steps:
-    - name: Event summary
-      run: |
-        echo 'Event summary for ${{ github.job }}'
-        echo 'Github head ref ${{github.github.head_ref}}'
-        echo 'Github ref ${{github.github.ref}}'
-        echo 'Github event ${{github.event}}'
+    - name: Dump GitHub context ${{ github.job }}
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
         
