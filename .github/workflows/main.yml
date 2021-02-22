@@ -2,11 +2,12 @@ name: Release-related workflows
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, releases/next ]
 
 jobs:
   add_to_next_release:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
     - name: Update git
       run: |
@@ -24,3 +25,4 @@ jobs:
         git fetch --tags
         git status
         git merge origin/main
+        git push origin releases/next
