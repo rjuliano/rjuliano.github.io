@@ -1,11 +1,13 @@
 name: Update release branch
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - releases/next
 jobs:
   update_release_branch:
     runs-on: ubuntu-latest
-#     if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     steps:
     - name: Dump GitHub context ${{ github.job }}
       env:
@@ -28,7 +30,14 @@ jobs:
         git status
         git merge origin/main
         git push origin releases/next
-    - name: Create release PR if needed
-      uses: ./.github/actions/release-pr
+    - name: Manage PR for next release
+      uses: repo-sync/pull-request@v2
+      with:
+        source_branch: releases/next
+        destination_branch: "main"
+        pr_title: Next release
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        pr_allow_empty: true
+
       
         
