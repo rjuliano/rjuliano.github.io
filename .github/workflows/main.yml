@@ -1,7 +1,7 @@
 name: Update release branch
 on:
   push:
-    branches: [ main, releases/next ]
+    branches: [ main ]
 jobs:
   update_release_branch:
     runs-on: ubuntu-latest
@@ -28,12 +28,4 @@ jobs:
         git status
         git merge origin/main
         git push origin releases/next
-  update_release_pr:
-    runs-on: ubuntu-latest
-#     if: github.ref == 'refs/heads/releases/next'
-    steps:
-    - name: Dump GitHub context ${{ github.job }}
-      env:
-        GITHUB_CONTEXT: ${{ toJSON(github) }}
-      run: echo "$GITHUB_CONTEXT"
         
