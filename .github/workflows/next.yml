@@ -36,6 +36,9 @@ jobs:
       run: | 
         ls -al
         npx semantic-release
+        git status
+        cat gradle.properties
+        cat CHANGELOG.md
     - name: Manage PR for next release
       uses: repo-sync/pull-request@v2
       with:
