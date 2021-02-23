@@ -51,6 +51,7 @@ jobs:
         npm install -g @semantic-release/git
         npm install -g @semantic-release/github
         npm install -g @semantic-release/exec
+        npm install -g conventional-changelog-conventionalcommits
     - name: Update version
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
