@@ -3,6 +3,13 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'test param description'
+        required: true
+        default: 'default value'
+    
 jobs:
   update_release_branch:
     runs-on: ubuntu-latest
