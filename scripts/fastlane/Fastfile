@@ -45,7 +45,7 @@ platform :android do |options|
       body: { 
         ref: "main",
         head: current_branch,
-        title: 'Release - Amplify Android #{next_version}'
+        title: 'Release - Amplify Android #{next_version}',
         body: pr_body
       }
     )
