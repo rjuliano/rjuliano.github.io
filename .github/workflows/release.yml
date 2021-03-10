@@ -24,10 +24,10 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 2.7
-    - name: Create a branch for the release
+    - name: Create or pull branch for the release
       run: |
         git checkout -b releases/`date "+%Y%m%d"`
-        git pull
+        git pull origin releases/`date "+%Y%m%d"`
     - name: Install dependencies
       run: |
         cd scripts
