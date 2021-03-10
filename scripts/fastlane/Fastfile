@@ -24,6 +24,7 @@ platform :android do |options|
 
     git_add(path: [gradle_properties_path, change_log_path])
     git_commit(path: [gradle_properties_path, change_log_path], message: "chore: Amplify Android #{next_version}")
+    push_to_git_remote
   end
 
 
