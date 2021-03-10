@@ -34,7 +34,9 @@ platform :android do |options|
     git_add(path: [gradle_properties_path, change_log_path])
     git_commit(path: [gradle_properties_path, change_log_path], message: "chore: Amplify Android #{next_version}")
     push_to_git_remote(force: true)
-    create_pull_request(base: 'main', title:'Release - Amplify Android #{next_version}', body:pr_body, repo: options[:repo])
+
+    repo_name_parts = options[:repo].split('/')
+    create_pull_request(base: 'main', title:'Release - Amplify Android #{next_version}', body:pr_body, owner:repo_name_parts[0], repo: repo_name_parts[1])
   end
 
 
