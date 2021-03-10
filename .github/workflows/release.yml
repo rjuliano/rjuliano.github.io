@@ -48,7 +48,7 @@ jobs:
     - name: Create PR for next release
       run: |
         cd scripts
-        bundle exec fastlane android manage_next_release_pr
+        bundle exec fastlane android manage_next_release_pr repo:${{ github.repository }}
     - name: Check modified file content
       run: |
         cat gradle.properties
