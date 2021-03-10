@@ -6,13 +6,12 @@ platform :android do |options|
   gradle_project_root = File.dirname(gradle_properties_path)
   change_log_path = "#{gradle_project_root}/CHANGELOG.md"
   version_regex = /(\d*)\.(\d*)\.(\d*)(?:-unstable\.)?(\d*)?/
-  pr_body <<EOF
+  pr_body = %Q(
 ## Tasks
 [ ] Verify version name in gradle.properties
 [ ] Verify version code in gradle.properties
 [ ] Verify CHANGELOG.md
-
-EOF
+)
 
   desc "Fetch all tags to ensure accurate calculation of the next release number."
   before_all do 
