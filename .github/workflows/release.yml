@@ -1,183 +1,56 @@
-RELEASE_TAG_PREFIX = 'release_v'
-default_platform(:android)
-
-platform :android do |options|
-  gradle_properties_path = File.expand_path("#{Dir.pwd()}/../../gradle.properties")
-  gradle_project_root = File.dirname(gradle_properties_path)
-  change_log_path = "#{gradle_project_root}/CHANGELOG.md"
-  version_regex = /(\d*)\.(\d*)\.(\d*)(?:-unstable\.)?(\d*)?/
-  pr_body = %Q(
-## Tasks
-[ ] Verify version name in gradle.properties
-[ ] Verify version code in gradle.properties
-[ ] Verify CHANGELOG.md
-)
-
-  desc "Fetch all tags to ensure accurate calculation of the next release number."
-  before_all do 
-    sh('git', 'fetch', '--tags')
-    sh('git', 'fetch')
-  end
-
-  lane :configure_git_options do |options|
-    sh('git', 'config', 'user.email', options[:git_user_email])
-    sh('git', 'config', 'user.name', options[:git_user_name])
-  end
-
-  lane :manage_next_release_pr do 
-    last_release_tag = last_git_tag(pattern: "#{RELEASE_TAG_PREFIX}*")
-    next_version, commits = calculate_next_release_version(release_tag_prefix: RELEASE_TAG_PREFIX, from_tag: last_release_tag)
-    UI.message("Version change #{last_release_tag} => #{next_version}")
-    update_gradle_properties(version: next_version)
-    update_change_log(last_release_tag: last_release_tag)
-
-    git_add(path: [gradle_properties_path, change_log_path])
-    git_commit(path: [gradle_properties_path, change_log_path], message: "chore: Amplify Android #{next_version}")
-    push_to_git_remote(force: true)
-    create_pull_request(base: 'main', title:'Release - Amplify Android #{next_version}', body:pr_body)
-  end
-
-
-  desc "Checks out a tag and runs the uploadArchives gradle task."
-  lane :push_tag_to_maven do |options|
-    UI.message("Pushing release #{options[:release_tag]} to maven")
-    sh("git", "checkout", options[:release_tag])
-    publish_to_maven
-  end
-
-  desc "Update changelog"
-  private_lane :update_change_log do |options|
-    changelog_body = changelog_from_git_commits(
-      between: [options[:last_release_tag], "HEAD"],
-      merge_commit_filtering: "exclude_merges",
-      pretty: "- %s"
-    )
-
-    open(change_log_path, 'a') { |f|
-      f.puts "# Release Amplify Android #{options[:next_version]}\n\n"
-      f.puts "#{changelog_body}\n\n"
-    }
-  end
-
-  desc "Increment versions"
-  private_lane :update_gradle_properties do |options|
-    version = options[:version].to_s
-    segments = version.match(version_regex).captures # version.split('.')
-    version_code = calculate_version_code(segments: segments, mode: 3)
-
-    UI.message("Updating versionName and versionCode in gradle.properties")
-
-    set_key_value(file: gradle_properties_path, key: 'VERSION_NAME', value: version)
-    set_key_value(file: gradle_properties_path, key: 'VERSION_CODE', value: version_code.to_s)
-
-  end
-
-  # Calculate the Android version code with one of 3 different approaches.
-  # Option 1 is the default approach which results in a version code that more or less resembles
-  # the version name.
-  # Option 2 and 3 are date-based. It's more straight forward in terms of calculation, but you lose
-  # the ability to be able to relate version name to version code.
-  desc "Calculate a version code based on new version segments"
-  private_lane :calculate_version_code do |options|
-    # Default to mode = 1 (derive from new version name)
-    mode = options[:mode] != nil ? options[:mode] : 1
-    segments = options[:segments]
-    prerelease = segments.length() > 3 ?  0 : segments[-1].to_i
-    # Android version code max version = 2_100_000_000
-
-    case mode
-    when 1
-      # ======= option 1 =======
-      # Derive the version code from version segements and pre-release number (if applicable)
-      # With this approach, you're "limited" to 999 minor versions per major and 999 patches per minor version.
-      # Limits: Max version for 1.x would be 1.999.999 with version code 199_999_900
-      version_code = segments[0].to_i * 100_000_000 + segments[1].to_i * 100_000 + segments[2].to_i * 100 + prerelease
-    when 2
-      # ======= option 2 =======
-      # Date-based approach 1
-      # We can only do <YEAR><MONTH><DAY><HR> because we'd be over the limit if we were to include minutes
-      # Reference: https://www.rockandnull.com/update-app-version-android/
-      # Limits: one release per hour max.=> Result would look like 21031002
-      version_code = Time.now.utc.strftime("%y%m%d%H").to_i 
-    when 3
-      # ======= option 3 =======
-      # Or include minute and subtract 1/1/2021 00:00 from Time.now.utc.strftime("%y%m%d%H%M").to_i
-      # Limits: one release per minute => Result would look like 2_090_229
-      version_code = Time.now.utc.strftime("%y%m%d%H%M").to_i - 2_101_010_000 
-    end
-    version_code
-  end
-
-  desc "Create the release commit."
-  private_lane :release_commit do |options|
-    next_version = options[:version]
-    commit_message = "chore: release #{next_version} [skip ci]"
-    sh('git', 'commit', '-am', commit_message)
-  end
-
-  desc "Tag in git and push to GitHub"
-  private_lane :add_tag do |options|
-    next_version = options[:version]
-
-    add_git_tag(tag: next_version)
-    push_git_tags(tag: next_version)
-  end
-
-  desc "Publish release to maven using attributes from environment variables."
-  private_lane :publish_to_maven do |options|
-    gradle(
-      project_dir: gradle_project_root,
-      task: "uploadArchives",
-      print_command: false,
-      flags: '--stacktrace',
-      properties: {
-        "SONATYPE_NEXUS_USERNAME": ConfigValueReader.from_environment_variable('SONATYPE_NEXUS_USERNAME'),
-        "SONATYPE_NEXUS_PASSWORD": ConfigValueReader.from_environment_variable('SONATYPE_NEXUS_PASSWORD'),
-        "signing.inMemoryKey": ConfigValueReader.from_environment_variable('signing.inMemoryKey'),
-        "signing.password": ConfigValueReader.from_environment_variable('signing.password'),
-        "signing.keyId": ConfigValueReader.from_environment_variable('signing.keyId'),
-        "signing.secretKeyRingFile": ConfigValueReader.from_environment_variable('signing.secretKeyRingFile')
-      }
-    )
-  end
-
-  desc "Publish release to maven without overriding gradle properties."
-  private_lane :publish_to_maven_no_overrides do |options|
-    gradle(
-      project_dir: gradle_project_root,
-      task: "uploadArchives",
-      print_command: false,
-      flags: '--stacktrace'
-    )
-  end
-
-  desc "Retrieve a parameter value from SSM."
-  private_lane :get_param_value do |options|
-    sh(
-      command: "aws ssm get-parameter --name #{options[:param_name]} --with-decryption --region us-east-1 --query Parameter.Value --output text",
-      log: false
-    )
-  end
-
-  desc "Cleanup all the build artifacts"
-  private_lane :cleanup do |options|
-    gradle(
-      project_dir: gradle_project_root,
-      task: "clean"
-    )
-  end
-end
-
-module ConfigValueReader
-  def self.from_environment_variable(param_name)
-    ENV[param_name.gsub('.','_')]
-  end
-
-  def self.from_ssm(param_name)
-    result = `aws ssm get-parameter --name #{param_name} --with-decryption --region us-east-1 --query Parameter.Value --output text`
-    if $?.exitstatus != 0
-      raise "Failed to get value for parameter #{param_name}"
-    end
-    result
-  end
-end
+name: Create PR for a release
+on:
+  workflow_dispatch:
+    inputs:
+      base_branch:
+        description: 'Release from which branch?'
+        required: true
+        default: 'main'
+      git_user_name:
+        description: 'Git user name'
+        required: true
+        default: 'devops'
+      git_user_email:
+        description: 'Git user name'
+        required: true
+        default: 'devops@test.com'
+jobs:
+  create_pr_for_next_release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Update git
+      run: |
+        sudo add-apt-repository -y ppa:git-core/ppa
+        sudo apt-get update
+        sudo apt-get install git -y
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.inputs.base_branch }}
+        token: ${{ github.token }} # This will need to change to a token belonging to a service account.
+        fetch-depth: 0
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+    - name: Install dependencies
+      run: |
+        cd scripts
+        gem install bundler
+        bundle install
+    - name: Configure git options
+      run: |
+        cd scripts
+        bundle exec fastlane android configure_git_options git_user_email:${{ github.event.inputs.git_user_email }} git_user_name:${{ github.event.inputs.git_user_name }}
+    - name: Create/checkout a branch for the release
+      run: |
+        branch_name=releases/`date "+%Y%m%d"` 
+        (git show-branch $branch_name &>/dev/null) && (git checkout $branch_name & git pull origin $branch_name) || (git checkout -b $branch_name)
+    - name: Create PR for next release
+      run: |
+        cd scripts
+        bundle exec fastlane android manage_next_release_pr
+    - name: Check modified file content
+      run: |
+        cat gradle.properties
+        cat CHANGELOG.md
+        git status
