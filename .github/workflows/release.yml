@@ -7,7 +7,7 @@ on:
         required: true
         default: 'main'
 jobs:
-  update_next_release:
+  create_pr_for_next_release:
     runs-on: ubuntu-latest
     steps:
     - name: Update git
@@ -27,6 +27,7 @@ jobs:
     - name: Create a branch for the release
       run: |
         git checkout -b releases/`date "+%Y%m%d"`
+        git pull
     - name: Install dependencies
       run: |
         cd scripts
