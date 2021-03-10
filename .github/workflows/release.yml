@@ -46,6 +46,8 @@ jobs:
         branch_name=releases/`date "+%Y%m%d"` 
         (git show-branch $branch_name &>/dev/null) && (git checkout $branch_name & git pull origin $branch_name) || (git checkout -b $branch_name)
     - name: Create PR for next release
+      env:
+        RELEASE_MANAGER_TOKEN: ${{ secrets.RELEASE_MANAGER_TOKEN }}
       run: |
         cd scripts
         bundle exec fastlane android manage_next_release_pr repo:${{ github.repository }}
