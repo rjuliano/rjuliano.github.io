@@ -17,6 +17,8 @@ platform :android do |options|
   before_all do 
     sh('git', 'config', '--global', 'user.email', 'devops@test.com')
     sh('git', 'config', '--global', 'user.name', 'devops')
+    sh('git', 'config', '--global', 'pull.ff', 'only')
+
     sh('git', 'fetch', '--tags')
     sh('git', 'fetch')
   end
