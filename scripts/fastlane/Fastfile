@@ -6,7 +6,7 @@ platform :android do |options|
   gradle_project_root = File.dirname(gradle_properties_path)
   change_log_path = "#{gradle_project_root}/CHANGELOG.md"
   version_regex = /(\d*)\.(\d*)\.(\d*)(?:-unstable\.)?(\d*)?/
-  pr_body << EOF
+  pr_body <<EOF
 ## Tasks
 [ ] Verify version name in gradle.properties
 [ ] Verify version code in gradle.properties
