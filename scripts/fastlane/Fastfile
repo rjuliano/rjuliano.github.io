@@ -9,6 +9,8 @@ platform :android do |options|
 
   desc "Fetch all tags to ensure accurate calculation of the next release number."
   before_all do 
+    sh('git', 'config', '--global', 'user.email', 'devops@test.com')
+    sh('git', 'config', '--global', 'user.name', 'devops')
     sh('git', 'fetch', '--tags')
     sh('git', 'fetch')
   end
