@@ -24,7 +24,7 @@ platform :android do |options|
     sh('git', 'config', 'user.name', options[:git_user_name])
   end
 
-  lane :manage_next_release_pr do 
+  lane :manage_next_release_pr do |options|
     last_release_tag = last_git_tag(pattern: "#{RELEASE_TAG_PREFIX}*")
     next_version, commits = calculate_next_release_version(release_tag_prefix: RELEASE_TAG_PREFIX, from_tag: last_release_tag)
     UI.message("Version change #{last_release_tag} => #{next_version}")
