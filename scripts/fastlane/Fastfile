@@ -21,6 +21,7 @@ platform :android do |options|
     update_change_log(last_release_tag: last_release_tag)
 
     git_add(path: [gradle_properties_path, change_log_path])
+    git_commit(path: [gradle_properties_path, change_log_path], message: "chore: Amplify Android #{next_version}")
   end
 
 
