@@ -39,7 +39,7 @@ platform :android do |options|
     current_branch = sh('git', 'branch', '--show-current')
     repo_name_parts = options[:repo].split('/')
     github_api(
-      api_token: ENV["GITHUB_TOKEN"],
+      api_token: ENV["RELEASE_MANAGER_TOKEN"],
       http_method: "POST",
       path: "/repos/#{repo_name_parts[0]}/#{repo_name_parts[1]}/pulls",
       body: { 
