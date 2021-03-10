@@ -45,7 +45,6 @@ jobs:
       run: |
         branch_name=releases/`date "+%Y%m%d"` 
         (git show-branch $branch_name &>/dev/null) && (git checkout $branch_name) || (git checkout -b $branch_name)
-        git pull --ff-only
     - name: Create PR for next release
       run: |
         cd scripts
