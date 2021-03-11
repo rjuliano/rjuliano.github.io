@@ -1,1 +1,49 @@
 
+# Release Amplify Android 
+
+- Pass in product name to Fastlane
+- Update PR and commit titles
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update release.yml
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update release.yml
+- Update Fastfile
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- Update Fastfile
+- Update release.yml
+- Update release.yml
+- Update Fastfile
+- Update release.yml
+- Update Fastfile
+- Update release.yml
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update release.yml
+- Update release.yml
+- Update Fastfile
+- Update release.yml
+- Update release.yml
+- Create Gemfile.lock
+- Create Gemfile
+- Create Pluginfile
+- Create Appfile
+- Create Fastfile
+- Create release.yml
+- try manual trigger
+
