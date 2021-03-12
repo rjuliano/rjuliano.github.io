@@ -32,6 +32,12 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 2.7
+    - name: Create/checkout a branch for the release
+      run: |
+        branch_name=release
+        git fetch --all
+        (git branch -D $branch_name &>/dev/null) && (echo 'Previous release branch deleted') || (echo 'No existing release branch to delete.')
+        git checkout -b $branch_name
     - name: Install dependencies
       run: |
         cd scripts
@@ -41,12 +47,6 @@ jobs:
       run: |
         cd scripts
         bundle exec fastlane android configure_git_options git_user_email:${{ github.event.inputs.git_user_email }} git_user_name:${{ github.event.inputs.git_user_name }}
-    - name: Create/checkout a branch for the release
-      run: |
-        branch_name=release
-        git fetch --all
-        (git branch -D $branch_name &>/dev/null) && (echo 'Previous release branch deleted') || (echo 'No existing release branch to delete.')
-        git checkout -b $branch_name
     - name: Create PR for next release
       env:
         RELEASE_MANAGER_TOKEN: ${{ secrets.RELEASE_MANAGER_TOKEN }}
