@@ -41,8 +41,7 @@ jobs:
               repo: context.repo.repo,
               pull_number: context.payload.pull_request.number,
             });
-            console.log(reviews);
-            const approvals = reviews.filter(review => review.state==='APPROVED').length;
+            const approvals = reviews.data.filter(review => review.state==='APPROVED').length;
             if (approvals < 2) {
               core.setFailed('Not enough approvals yet :(');
             }
