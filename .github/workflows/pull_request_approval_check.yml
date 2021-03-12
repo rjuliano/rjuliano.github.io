@@ -26,22 +26,22 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
 #       - uses: actions/checkout@v2
-      - name: Dump GitHub context ${{ github.job }}
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
+#       - name: Dump GitHub context ${{ github.job }}
+#         env:
+#           GITHUB_CONTEXT: ${{ toJSON(github) }}
+#         run: echo "$GITHUB_CONTEXT"
       - uses: actions/github-script@v3
         if: ${{ github.event_name == 'pull_request' || github.event_name == 'pull_request_review' }}
         id: get_approval_count
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |            
-            console.log(context);
             const reviews = github.pulls.listReviews({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.payload.pull_request.number,
             });
+            console.log(reviews);
             const approvals = reviews.filter(review => review.state==='APPROVED').length;
             if (approvals < 2) {
               core.setFailed('Not enough approvals yet :(');
