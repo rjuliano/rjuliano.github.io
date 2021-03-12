@@ -1,8 +1,5 @@
 name: Commits pushed to main
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       name:
