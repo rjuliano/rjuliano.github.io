@@ -1,8 +1,6 @@
 name: Manage next release
 on:
-  push:
-    branches:
-      - releases/next
+  workflow_dispatch:
 jobs:
   manage_release_pr:
     runs-on: ubuntu-latest
