@@ -36,6 +36,7 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |            
+            console.log(context);
             const reviews = github.pulls.listReviews(
               context.repo.owner,
               context.repo.repo,
