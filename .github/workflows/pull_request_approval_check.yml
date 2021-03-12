@@ -39,7 +39,7 @@ jobs:
             const reviews = github.pulls.listReviews(
               context.repo.owner,
               context.repo.repo,
-              context.event.pull_request.number,
+              context.payload.event.pull_request.number,
             );
             const approvals = reviews.filter(review => review.state==='APPROVED').length;
             if (approvals < 2) {
