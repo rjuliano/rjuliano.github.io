@@ -1,19 +1,10 @@
 name: Create PR for a release
 on:
   workflow_dispatch:
-    inputs:
-      base_branch:
-        description: 'Release from which branch?'
-        required: true
-        default: 'main'
-      git_user_name:
-        description: 'Git user name'
-        required: true
-        default: 'devops'
-      git_user_email:
-        description: 'Git user name'
-        required: true
-        default: 'devops@test.com'
+env:
+  GIT_USER_NAME: amplify-android-dev+ghops
+  GIT_USER_EMAIL: amplify-android-dev+ghops@amazon.com
+  BASE_BRANCH: main
 jobs:
   create_pr_for_next_release:
     runs-on: ubuntu-latest
@@ -25,19 +16,12 @@ jobs:
         sudo apt-get install git -y
     - uses: actions/checkout@v2
       with:
-        ref: ${{ github.event.inputs.base_branch }}
-        token: ${{ github.token }} # This will need to change to a token belonging to a service account.
+        ref: $BASE_BRANCH
         fetch-depth: 0
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 2.7
-    - name: Create/checkout a branch for the release
-      run: |
-        branch_name=release
-        git fetch --all
-        (git branch -D $branch_name &>/dev/null) && (echo 'Previous release branch deleted') || (echo 'No existing release branch to delete.')
-        git checkout -b $branch_name
     - name: Install dependencies
       run: |
         cd scripts
@@ -46,7 +30,13 @@ jobs:
     - name: Configure git options
       run: |
         cd scripts
-        bundle exec fastlane android configure_git_options git_user_email:${{ github.event.inputs.git_user_email }} git_user_name:${{ github.event.inputs.git_user_name }}
+        bundle exec fastlane android configure_git_options git_user_email:$GIT_USER_EMAIL git_user_name:$GIT_USER_NAME
+    - name: Create/checkout a branch for the release
+      run: |
+        branch_name=release
+        git fetch --all
+        (git branch -D $branch_name &>/dev/null) && (echo 'Existing $branch_name branch deleted') || (echo 'No existing $branch_name branch to delete.')
+        git checkout -b $branch_name
     - name: Create PR for next release
       env:
         RELEASE_MANAGER_TOKEN: ${{ secrets.RELEASE_MANAGER_TOKEN }}
