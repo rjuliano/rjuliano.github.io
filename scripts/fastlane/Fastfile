@@ -43,15 +43,10 @@ platform :android do |options|
                         body:pr_body, 
                         repo: options[:repo], 
                         api_token: ENV["RELEASE_MANAGER_TOKEN"])
+    cleanup
   end
 
 
-  desc "Checks out a tag and runs the uploadArchives gradle task."
-  lane :push_tag_to_maven do |options|
-    UI.message("Pushing release #{options[:release_tag]} to maven")
-    sh("git", "checkout", options[:release_tag])
-    publish_to_maven
-  end
 
   desc "Update changelog"
   private_lane :update_change_log do |options|
@@ -62,7 +57,7 @@ platform :android do |options|
     )
 
     open(change_log_path, 'a') { |f|
-      f.puts "# Release Amplify Android #{options[:next_version]}\n\n"
+      f.puts "## Release {options[:next_version]}\n\n"
       f.puts "#{changelog_body}\n\n"
     }
   end
@@ -78,19 +73,6 @@ platform :android do |options|
 
   end
 
-  # Calculate the Android version code. Leaving this here for posterity
-  # since it appears it's not necessary to increment versionCode for Android libraries.
-  desc "Calculate a version code based on new version segments"
-  private_lane :calculate_version_code do |options|
-    segments = options[:segments]
-    prerelease = segments.length() > 3 ?  0 : segments[-1].to_i
-    # Android version code max version = 2_100_000_000
-
-    # Derive the version code from version segements and pre-release number (if applicable)
-    # With this approach, you're "limited" to 999 minor versions per major and 999 patches per minor version.
-    # Limits: Max version for 1.x would be 1.999.999 with version code 199_999_900
-    segments[0].to_i * 100_000_000 + segments[1].to_i * 100_000 + segments[2].to_i * 100 + prerelease
-  end
 
   desc "Create the release commit."
   private_lane :release_commit do |options|
@@ -122,14 +104,6 @@ platform :android do |options|
         "signing.keyId": ConfigValueReader.from_environment_variable('signing.keyId'),
         "signing.secretKeyRingFile": ConfigValueReader.from_environment_variable('signing.secretKeyRingFile')
       }
-    )
-  end
-
-  desc "Retrieve a parameter value from SSM."
-  private_lane :get_param_value do |options|
-    sh(
-      command: "aws ssm get-parameter --name #{options[:param_name]} --with-decryption --region us-east-1 --query Parameter.Value --output text",
-      log: false
     )
   end
 
