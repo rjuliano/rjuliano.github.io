@@ -71,3 +71,79 @@
 - Create release.yml
 - try manual trigger
 
+# Release Amplify Android 
+
+- Update release.yml
+- Update release.yml
+- chore(release): Amplify Android - 1.0.3
+- Update pull_request_approval_check.yml
+- Update README.md
+- Update main.yml
+- Update next.yml
+- Update pull_request_approval_check.yml
+- Update Fastfile
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- Update pull_request_approval_check.yml
+- Update pull_request_approval_check.yml
+- Update pull_request_approval_check.yml
+- Update pull_request_approval_check.yml
+- Update pull_request_approval_check.yml
+- Update pull_request_approval_check.yml
+- Update pull_request_approval_check.yml
+- Update pull_request_approval_check.yml
+- Update pull_request_approval_check.yml
+- Update pull_request_approval_check.yml
+- Update pull_request_approval_check.yml
+- Update pull_request_approval_check.yml
+- Create pull_request_approval_check.yml
+- Changed branch naming strategy
+- PR Feedback
+- Pass in product name to Fastlane
+- Update PR and commit titles
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update release.yml
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update release.yml
+- Update Fastfile
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- Update release.yml
+- Update Fastfile
+- Update release.yml
+- Update release.yml
+- Update Fastfile
+- Update release.yml
+- Update Fastfile
+- Update release.yml
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update Fastfile
+- Update release.yml
+- Update release.yml
+- Update Fastfile
+- Update release.yml
+- Update release.yml
+- Create Gemfile.lock
+- Create Gemfile
+- Create Pluginfile
+- Create Appfile
+- Create Fastfile
+- Create release.yml
+- try manual trigger
+
