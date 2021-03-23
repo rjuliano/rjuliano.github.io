@@ -71,3 +71,7 @@
 - Create release.yml
 - try manual trigger
 
+## Release {options[:next_version]}
+
+- Update Fastfile
+
