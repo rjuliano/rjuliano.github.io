@@ -16,7 +16,7 @@ jobs:
         sudo apt-get install git -y
     - uses: actions/checkout@v2
       with:
-        ref: $BASE_BRANCH
+        ref: ${{ env.BASE_BRANCH }}
         fetch-depth: 0
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
