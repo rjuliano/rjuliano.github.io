@@ -49,8 +49,8 @@ jobs:
     - name: Create Github release
       uses: actions/github-script@v3
       env:
-        RELEASE_NOTES: ${{ steps.get_version_and_changelog.release_notes }}
-        VERSION_NAME: ${{ steps.get_version_and_changelog.version_name }}
+        RELEASE_NOTES: ${{ steps.get_version_and_changelog.outputs.release_notes }}
+        VERSION_NAME: ${{ steps.get_version_and_changelog.outputs.version_name }}
         COMMIT_SHA: ${{ needs.get_commit_sha.outputs.commit_sha }}
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
