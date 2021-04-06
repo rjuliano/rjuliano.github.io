@@ -54,10 +54,10 @@ jobs:
           github.repos.createRelease({ 
             owner: context.repo.owner,
             repo: context.repo.repo,
-            name: 'Release ' + steps.get_version_and_changelog.version_name,
-            tag_name: 'release_v' + steps.get_version_and_changelog.version_name,
-            target_commitish: needs.get_commit_sha.outputs.commit_sha,
-            body: steps.get_version_and_changelog.release_notes
+            name: `Release ${steps.get_version_and_changelog.version_name}`,
+            tag_name: `release_v${steps.get_version_and_changelog.version_name}`,
+            target_commitish: `${needs.get_commit_sha.outputs.commit_sha}`,
+            body: `${steps.get_version_and_changelog.release_notes}`
           })
       
       
