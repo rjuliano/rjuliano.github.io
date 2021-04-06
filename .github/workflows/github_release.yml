@@ -30,4 +30,23 @@ jobs:
     steps:
     - name: Echo commit sha
       run: echo ${{ needs.get_commit_sha.outputs.commit_sha }}
+    - name: Checkout commit for release
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ needs.get_commit_sha.outputs.commit_sha }}
+        fetch-depth: 0
+    - name: CAT changelog and git log
+      run: |
+        git log --oneline --max-count=10
+        cat CHANGELOG.md
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
       
