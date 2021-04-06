@@ -18,8 +18,10 @@ jobs:
         run: |
           if [[ ${{ github.event_name }} -eq 'pull_request' ]] 
           then
+            echo "Pull from PR event"
             echo "::set-output name=commit_sha::${{ github.event.pull_request.merge_commit_sha }}"
           else
+            echo "Pull from manual trigger parameter."
             echo "::set-output name=commit_sha::${{ github.event.inputs.commit_sha }}"
           fi
   create_release:
