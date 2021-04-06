@@ -1,9 +1,10 @@
 name: Create a Github release
 on:
   workflow_dispatch:
-    commit_sha:
-        description: 'The release commit'     
-        required: true
+    inputs:
+      commit_sha:
+          description: 'The release commit'     
+          required: true
 env:
   GIT_USER_NAME: amplify-android-dev+ghops
   GIT_USER_EMAIL: amplify-android-dev+ghops@amazon.com
@@ -15,7 +16,8 @@ jobs:
     steps:
       - id: determine_commit_source
         run: |
-          if [[ ${{ github.event_name }} -eq 'pull_request' ]] then
+          if [[ ${{ github.event_name }} -eq 'pull_request' ]] 
+          then
             echo "::set-output name=commit_sha::${{ github.event.pull_request.merge_commit_sha }}"
           else
             echo "::set-output name=commit_sha::${{ github.event.inputs.commit_sha }}"
