@@ -71,3 +71,12 @@
 - Create release.yml
 - try manual trigger
 
+# Release 1.0.4
+
+### Other work
+- Update Fastfile ([3030e16](/3030e16714e8a43f5378f12ba0a4822b13dd1e86))
+- Update Fastfile ([26c97b1](/26c97b1e9d96f019f43c96fd122a9dc321dc8327))
+- Update Gemfile.lock ([79d9c21](/79d9c213fe1a0a7bffe68c88975a69c43fb1827a))
+- Update Pluginfile ([87e83a5](/87e83a5f7bb1a0232b56fc9df9f6ac529e360526))
+- Update release.yml ([ef60ccf](/ef60ccfda104236521a99ac868b7d3a89d91c454))
+
