@@ -48,16 +48,21 @@ jobs:
         echo $release_notes
     - name: Create Github release
       uses: actions/github-script@v3
+      env:
+        RELEASE_NOTES: ${{ steps.get_version_and_changelog.release_notes }}
+        VERSION_NAME: ${{ steps.get_version_and_changelog.version_name }}
+        COMMIT_SHA: ${{ needs.get_commit_sha.outputs.commit_sha }}
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
+          const { VERSION_NAME, RELEASE_NOTES, COMMIT_SHA } = process.env
           github.repos.createRelease({ 
             owner: context.repo.owner,
             repo: context.repo.repo,
-            name: `Release ${steps.get_version_and_changelog.version_name}`,
-            tag_name: `release_v${steps.get_version_and_changelog.version_name}`,
-            target_commitish: `${needs.get_commit_sha.outputs.commit_sha}`,
-            body: `${steps.get_version_and_changelog.release_notes}`
+            name: `Release ${VERSION_NAME}`,
+            tag_name: `release_v${VERSION_NAME}`,
+            target_commitish: `${COMMIT_SHA}`,
+            body: `${RELEASE_NOTES}`
           })
       
       
