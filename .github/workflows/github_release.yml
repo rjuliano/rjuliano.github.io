@@ -35,37 +35,30 @@ jobs:
       with:
         ref: ${{ needs.get_commit_sha.outputs.commit_sha }}
         fetch-depth: 0
-    - name: CAT changelog and git log
-      run: |
-        git log --oneline --max-count=10
-        cat CHANGELOG.md
     - name: Get version and change log
+      id: get_version_and_changelog
       run: |
         version_name=$(cat gradle.properties | grep VERSION_NAME | sed  s/VERSION_NAME=//g)
         start_line_change_log=$(grep -n $version_name CHANGELOG.md | cut -f1 -d:)
         total_lines=$(cat CHANGELOG.md | wc -l)
         release_notes=$(sed -n "$start_line_change_log,$total_lines p" CHANGELOG.md)
+        echo "::set-output name=version_name::$version_name"
+        echo "::set-output name=release_notes::$release_notes"
         echo $version_name
         echo $release_notes
-#     - name: Create release
-#       uses: actions/github-script@v3
-#       with:
-#         github-token: ${{secrets.GITHUB_TOKEN}}
-#         script: |
-#           github.issues.createComment({
-#             issue_number: context.issue.number,
-#             owner: context.repo.owner,
-#             repo: context.repo.repo,
-#             body: '👋 Thanks for reporting!'
-#           })
-      
-      
-      
-      
-      
-      
-      
-      
+    - name: Create Github release
+      uses: actions/github-script@v3
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.repos.createRelease({ 
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            name: 'Release ' + steps.get_version_and_changelog.version_name,
+            tag_name: 'release_v' + steps.get_version_and_changelog.version_name,
+            target_commitish: needs.get_commit_sha.outputs.commit_sha,
+            body: steps.get_version_and_changelog.release_notes
+          })
       
       
       
