@@ -43,6 +43,10 @@ jobs:
       run: |
         version_name=$(cat gradle.properties | grep VERSION_NAME | sed  s/VERSION_NAME=//g)
         start_line_change_log=$(grep -n $version_name CHANGELOG.md | cut -f1 -d:)
+        total_lines=$(cat CHANGELOG.md | wc -l)
+        release_notes=$(sed -n "$start_line_change_log,$total_lines p" CHANGELOG.md)
+        echo $version_name
+        echo $release_notes
 #     - name: Create release
 #       uses: actions/github-script@v3
 #       with:
