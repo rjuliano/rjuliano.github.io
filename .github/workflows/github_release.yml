@@ -42,6 +42,7 @@ jobs:
         start_line_change_log=$(grep -n $version_name CHANGELOG.md | cut -f1 -d:)
         total_lines=$(cat CHANGELOG.md | wc -l)
         release_notes=$(sed -n "$start_line_change_log,$total_lines p" CHANGELOG.md)
+        release_notes=$(echo $release_notes | base64)
         echo "::set-output name=version_name::$version_name"
         echo "::set-output name=release_notes::'$release_notes'"
         echo $version_name
@@ -62,7 +63,7 @@ jobs:
             name: `Release ${VERSION_NAME}`,
             tag_name: `release_v${VERSION_NAME}`,
             target_commitish: `${COMMIT_SHA}`,
-            body: `${RELEASE_NOTES}`
+            body: btoa(RELEASE_NOTES)
           })
       
       
