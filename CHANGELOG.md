@@ -104,3 +104,10 @@
 - Update github_release.yml ([e8472c7](/e8472c79abe0ad26d26efc0a4bd69c569dfc2bcc))
 - Update github_release.yml ([7e42986](/7e42986985fc6c877661815f79fc9d5999fbbe03))
 
+# Release 1.0.6
+
+### Building system
+- **release:** Amplify Android - 1.0.5 ([cf359f5](/cf359f53fedb54b8fb36f31027dcc840f4cab2c6))
+
+### Other work
+
