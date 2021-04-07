@@ -63,7 +63,7 @@ jobs:
             name: `Release ${VERSION_NAME}`,
             tag_name: `release_v${VERSION_NAME}`,
             target_commitish: `${COMMIT_SHA}`,
-            body: new Buffer(RELEASE_NOTES, 'base64').toString('utf8');,
+            body: new Buffer(RELEASE_NOTES, 'base64').toString('utf8'),
             draft: true
           })
       
