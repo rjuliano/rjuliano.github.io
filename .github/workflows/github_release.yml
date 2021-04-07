@@ -43,7 +43,7 @@ jobs:
         total_lines=$(cat CHANGELOG.md | wc -l)
         release_notes=$(sed -n "$start_line_change_log,$total_lines p" CHANGELOG.md)
         echo "::set-output name=version_name::$version_name"
-        echo "::set-output name=release_notes::$release_notes"
+        echo "::set-output name=release_notes::'$release_notes'"
         echo $version_name
         echo $release_notes
     - name: Create Github release
