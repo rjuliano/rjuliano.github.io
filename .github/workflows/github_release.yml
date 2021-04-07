@@ -63,7 +63,8 @@ jobs:
             name: `Release ${VERSION_NAME}`,
             tag_name: `release_v${VERSION_NAME}`,
             target_commitish: `${COMMIT_SHA}`,
-            body: btoa(RELEASE_NOTES)
+            body: btoa(RELEASE_NOTES),
+            draft: true
           })
       
       
